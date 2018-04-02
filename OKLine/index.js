@@ -13,7 +13,7 @@ export default class OKLine {
             dataSource: [],
             yAxis: {    // y轴相关配置
                 maxDecimal: 1,      //最大精度，x位小数
-                totalNumber: 5,    //Y轴刻度数量
+                totalNumber: 10,    //Y轴刻度数量
                 textMaxWidth: 80,   //Y轴文本最大宽度
             },
             xAxis: {    // x轴相关配置
@@ -112,7 +112,7 @@ export default class OKLine {
             maxValue, minValue, height, width,
             originX, originY
         } = this.chartConfig;
-        const {totalNumber, textMaxWidth, maxDecimal} = this.chartConfig.yAxis;
+        const {totalNumber, maxDecimal} = this.chartConfig.yAxis;
         // 绘制y轴标记
         const oneVal = (maxValue - minValue) / totalNumber;
         const oneHeight = parseInt(height / totalNumber);
@@ -122,24 +122,14 @@ export default class OKLine {
             const xPosition = originX - 10;
             const yPosition = originY - (oneHeight * i);
 
-            ctx.fillText(markerVal, xPosition, yPosition, textMaxWidth); // 文字
+            ctx.fillText(markerVal, xPosition, yPosition); // 文字
             if (i > 0) {
                 this._drawLine(originX + 2, yPosition, originX + width, yPosition);
             }
         }
 
         // 绘制 x
-        /*var textNb = 6;
-        ctx.textAlign = "center";
-        for (var i = 0; i < tobalBars; i++) {
-            if (tobalBars > textNb && i % parseInt(tobalBars / 6) != 0) {
-                continue;
-            }
-            var markerVal = dataArr[i][0];
-            var xMarker = parseInt(originX + cWidth * (i / tobalBars) + bMargin + bWidth / 2);
-            var yMarker = originY + 30;
-            ctx.fillText(markerVal, xMarker, yMarker, cSpace); // 文字
-        }*/
+        //X轴目前不需要标记
     }
 
     /*

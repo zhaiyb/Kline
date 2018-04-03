@@ -1,8 +1,20 @@
 <html>
-<canvas id="kline"
-        width="900" height="400"
-        style="border: 1px solid #ccc; margin-top: 15px;">
+<head>
+    <style>
+        canvas {
+            width: 900px;
+            height: 400px;
+            position: absolute;
+            margin-top: 15px;
+        }
 
-</canvas>
+        #kline {
+            z-index: 1;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<canvas id="kline"></canvas>
 <script src="./dist/bundle.js"></script>
 </html>

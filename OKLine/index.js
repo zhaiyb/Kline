@@ -2,6 +2,7 @@ export default class OKLine {
     constructor(domId) {
         const canvas = document.getElementById(domId);
         this.canvas = canvas;
+        this.overlayCanvas = document.getElementById()
         this.ctx = canvas.getContext('2d');
         // chart基础配置
         const defaultChartConfig = {
@@ -31,7 +32,9 @@ export default class OKLine {
             colorRed: '#ee6560'
         };
         this.candleConfig = defaultCandleConfig;
+        this._bindEvent();
     }
+
     /*
     * 设置数据源
     * 根据数据源画图
@@ -44,6 +47,7 @@ export default class OKLine {
         this.drawMarkers(); //画标记
         this.drawCandles(); //画K线
     }
+
     /*
     * 根据dataSource设置chart配置
     * Y轴最大最小值，每个单位值的高度
@@ -72,6 +76,7 @@ export default class OKLine {
             oneValueHeight: parseInt(oldConfig.height / (maxValue - minValue))  //单位(px/value)
         }
     }
+
     //
 
     /*
@@ -136,7 +141,7 @@ export default class OKLine {
     * 遍历数据画K线
     * */
     drawCandles() {
-        const {chartConfig,candleConfig} = this;
+        const {chartConfig, candleConfig} = this;
         chartConfig.dataSource.forEach((candle, index) => {
             const {originX} = chartConfig;
             //中心x坐标
@@ -194,12 +199,42 @@ export default class OKLine {
         ctx.stroke();
         ctx.closePath();
     }
+
     /*
     * 私有方法-清空画布
     * */
     _clearCanvas() {
-        const {canvas,ctx} = this;
-        ctx.clearRect(0,0,canvas.width,canvas.height);
+        const {canvas, ctx} = this;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    /*事件绑定*/
+    _bindEvent() {
+        this.canvas.addEventListener("mousemove", this._mouseMove.bind(this), false);
+    }
+
+    _mouseMove(e) {
+        const {ctx} = this;
+        const {width, originX} = this.chartConfig;
+        const {pageX,pageY} = e;
+        const {x,y} = this._getPointOnCanvas(pageX,pageY);
+        const message = "MOVE 鼠标坐标：" + pageX + "," + pageY + " --canvas坐标："
+            + this._getPointOnCanvas(pageX, pageY).x + "," + this._getPointOnCanvas(pageX, pageY).y;
+        //console.log(message);
+        ctx.strokeStyle = "#000";
+        this._drawLine(originX,y,originX+width,y);
+    }
+
+    /*
+    * 私有方法-获取鼠标相对canvas画布位置
+    * */
+    _getPointOnCanvas(x, y) {
+        const {canvas} = this;
+        const bbox = canvas.getBoundingClientRect();
+        return {
+            x: Math.round((x - bbox.left) * (canvas.width / bbox.width)),
+            y: Math.round((y - bbox.top) * (canvas.height / bbox.height))
+        };
     }
 }
 
